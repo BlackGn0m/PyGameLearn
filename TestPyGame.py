@@ -75,4 +75,4 @@ while True:
     y += dy
     pygame.display.update()
     # pygame.display.flip()
-    clock.tick(60)
+    clock.tick(120)
