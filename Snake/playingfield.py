@@ -9,7 +9,7 @@ class PlayingField:
             err += f' but it is {type(display)}'
             raise TypeError(err)
         self._const = Const()
-        self._display = None
+        self._display = display
         self._width = 0
         self._height = 0
         self._margin = 0
@@ -60,7 +60,6 @@ class PlayingField:
         tmpSurf = self._font.render(scorestr, True, self._const.SCORECOLOR)
         self._display.blit(tmpSurf, (x, y))
 
-
     @property
     def score(self):
         return self._score
@@ -72,4 +71,12 @@ class PlayingField:
     def _showgrid(self):
         if self._display is None:
             return
-        
+        x = int(self._width * self._const.MENURATIO + self._margin//2)
+        y = self._margin
+        dy = (self._display.get_height() - self._margin * 2) // 30
+        dx = (self._display.get_width() - x - self._margin * 2) // 30
+        for i in range(31):
+            pygame.draw.line(self._display, (255, 0, 0),
+                             (x + i * dx, self._margin),
+                             (x + i * dx,
+                              self._display.get_height() - self._margin), 1)
