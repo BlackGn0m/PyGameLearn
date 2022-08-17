@@ -1,14 +1,6 @@
 import pygame
+from const import Const
 
-# ------ Global variable -----------------
-FPS = 60
-WHITE = (255, 255, 255)
-GREEN = (100, 200, 100)
-RED = (255, 0, 0)
-BLACK = (0, 0, 0)
-DEBUG = True
-BASE_WIDTH = 1024
-BASE_HEIGHT = 768
 
 
 class PlayingField:
@@ -28,9 +20,10 @@ def main():
     pygame.init()
     vi = pygame.display.Info()
     flags = pygame.HWSURFACE
-    winWidth = BASE_WIDTH
-    winHeight = BASE_HEIGHT
-    if not DEBUG:
+    const = Const()
+    winWidth = const.BASEWIDTH
+    winHeight = const.BASEHEIGHT
+    if not const.DEBUG:
         flags |= pygame.FULLSCREEN
         winWidth = vi.current_w
         winHeight = vi.current_h
@@ -70,12 +63,12 @@ def main():
         if gameStop:
             continue
         # -------- Paint playing field -----------
-        display.fill(GREEN)
+        display.fill(const.BGCOLOR)
         playingField.update()
 
         # -------- Update display ----------------
         pygame.display.update()
-        clock.tick(FPS)
+        clock.tick(const.FPS)
 
 
 if __name__ == '__main__':
