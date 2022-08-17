@@ -1,8 +1,8 @@
 class Const:
     def __init__(self):
-        self._debug = False
+        self._debug = True
         self._basewidth = 1024
-        self._baseheight = 768
+        self._baseheight = 600
         self._fps = 60
 
         # Colors
