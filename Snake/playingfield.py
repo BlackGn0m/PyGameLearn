@@ -14,7 +14,10 @@ class PlayingField:
         self._height = 0
         self._margin = 0
         self._fieldrect = ()
+        self._score = 0
         # self._menurect = ()
+        self._font = pygame.font.Font('res/a_lcdnova.ttf',
+                                      self._const.SCOREFONTSIZE)
         self.changeDisplay(display)
         pass
 
@@ -38,4 +41,35 @@ class PlayingField:
 
         pygame.draw.line(self._display, self._const.BORDERCOLOR, (x, 0),
                          (x, self._height), self._margin)
+        self._showGameInfo()
+        if self._const.DEBUG:
+            self._showgrid()
         pass
+
+    def _showGameInfo(self):
+        if self._display is None:
+            return
+        x = self._margin * 2
+        y = self._margin * 2
+        dy = self._font.get_height()
+        dy += dy // 2
+        tmpSurf = self._font.render('ОЧКИ:', True, self._const.SCORECOLOR)
+        self._display.blit(tmpSurf, (x, y))
+        y += dy
+        scorestr = '{:010d}'.format(self._score)
+        tmpSurf = self._font.render(scorestr, True, self._const.SCORECOLOR)
+        self._display.blit(tmpSurf, (x, y))
+
+
+    @property
+    def score(self):
+        return self._score
+
+    def addScore(self, addpoints):
+        if addpoints > 0:
+            self._score += addpoints
+
+    def _showgrid(self):
+        if self._display is None:
+            return
+        

@@ -34,6 +34,7 @@ def main():
                     continue
                 if event.key == pygame.K_UP:
                     # Move up
+                    # playingField.addScore(1)
                     pass
                 if event.key == pygame.K_DOWN:
                     # Move down

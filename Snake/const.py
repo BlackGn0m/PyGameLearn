@@ -4,10 +4,12 @@ class Const:
         self._basewidth = 1024
         self._baseheight = 600
         self._fps = 60
+        self._scorefontsize = 30
 
         # Colors
         self._bgcolor = (100, 200, 100)
         self._bordercolor = (50, 100, 50)
+        self._scorecolor = (50, 100, 50)
 
         # Ratios
         self._marginratio = 0.017
@@ -50,3 +52,11 @@ class Const:
     @property
     def FIELDRATIO(self):
         return self._fieldratio
+
+    @property
+    def SCORECOLOR(self):
+        return self._scorecolor
+
+    @property
+    def SCOREFONTSIZE(self):
+        return self._scorefontsize
