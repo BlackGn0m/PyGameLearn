@@ -12,15 +12,36 @@ class TestSprite(pygame.sprite.Sprite):
         self._dy = dy
         font = pygame.font.SysFont('Consolas', 20)
         self.image = font.render(text, True, (0, 0, 0))
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect = self.image.get_rect(topleft=(x, y))
 
     def update(self):
-        if self.rect.x + self._dx < 0 or self.rect.x + self._dx > BASE_WIDTH:
+        if self.rect.x + self._dx < 0 or \
+                (self.rect.x + self.rect.width) + self._dx > BASE_WIDTH:
             self._dx *= -1
-        if self.rect.y + self._dy < 0 or self.rect.y + self._dy > BASE_HEIGHT:
+        if self.rect.y + self._dy < 0 or \
+                (self.rect.y + self.rect.height) + self._dy > BASE_HEIGHT:
             self._dy *= -1
         self.rect.x += self._dx
         self.rect.y += self._dy
+
+    @property
+    def speed(self):
+        return self._dx, self._dy
+
+    @speed.setter
+    def speed(self, newvalue):
+        self._dx = newvalue[0]
+        self._dy = newvalue[1]
+
+
+def detectCollision(group):
+    for sp in group:
+        collist = pygame.sprite.spritecollide(sp, group, False)
+        for cs in collist:
+            if cs is sp:
+                continue
+
+    pass
 
 
 def main():
@@ -30,8 +51,8 @@ def main():
     clock = pygame.time.Clock()
     sg = pygame.sprite.Group()
     for i in range(10):
-        x = random.randint(10, BASE_WIDTH)
-        y = random.randint(10, BASE_HEIGHT)
+        x = random.randint(100, BASE_WIDTH - 100)
+        y = random.randint(100, BASE_HEIGHT - 100)
         ts = TestSprite(x, y, 3, 3, f'TEST_{i}')
         sg.add(ts)
 
@@ -44,9 +65,8 @@ def main():
                 pygame.quit()
                 return
         display.fill((200, 200, 200))
-        # display.blit(ts.image,ts.rect)
-        # ts.update()
         sg.draw(display)
+        detectCollision(sg)
         sg.update()
         pygame.display.update()
         clock.tick(60)
