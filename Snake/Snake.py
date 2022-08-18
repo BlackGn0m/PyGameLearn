@@ -15,6 +15,7 @@ def main():
         winWidth = vi.current_w
         winHeight = vi.current_h
     display = pygame.display.set_mode((winWidth, winHeight), flags)
+    pygame.display.set_caption('Snake game')
     clock = pygame.time.Clock()
     playingField = PlayingField(display)
 
