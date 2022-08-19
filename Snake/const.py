@@ -4,12 +4,12 @@ class Const:
         self._basewidth = 1024
         self._baseheight = 600
         self._fps = 60
-        self._scorefontsize = 30
+        self._scorefontsize = 22
 
         # Colors
         self._bgcolor = (100, 200, 100)
         self._bordercolor = (50, 100, 50)
-        self._scorecolor = (50, 100, 50)
+        self._scorecolor = (0, 255, 0)
 
         # Ratios
         self._marginratio = 0.017

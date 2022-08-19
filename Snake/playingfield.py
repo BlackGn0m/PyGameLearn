@@ -15,9 +15,13 @@ class PlayingField:
         self._margin = 0
         self._fieldrect = ()
         self._score = 0
+        self._level = 1
         # self._menurect = ()
         self._font = pygame.font.Font('res/a_lcdnova.ttf',
                                       self._const.SCOREFONTSIZE)
+        self._fieldrect = pygame.rect.Rect(self._margin, self._margin,
+                                           self._width - self._margin * 2,
+                                           self._height - self._margin * 2)
         self.changeDisplay(display)
         pass
 
@@ -31,52 +35,52 @@ class PlayingField:
         self._height = display.get_height()
         self._margin = min(int(self._width * self._const.MARGINRATIO),
                            int(self._height * self._const.MARGINRATIO))
-        # self._menurect = ()
+        self._fieldrect = pygame.rect.Rect(self._margin, self._margin,
+                                           self._width - self._margin * 2,
+                                           self._height - self._margin * 2)
 
     def update(self):
         pygame.draw.rect(self._display, self._const.BORDERCOLOR,
                          (0, 0, self._width, self._height),
                          self._margin)
-        x = int(self._width * self._const.MENURATIO)
 
-        pygame.draw.line(self._display, self._const.BORDERCOLOR, (x, 0),
-                         (x, self._height), self._margin)
-        self._showGameInfo()
-        if self._const.DEBUG:
-            self._showgrid()
+        gameInfoHeight = self._showGameInfo()
+        self._fieldrect = pygame.rect.Rect(self._margin, gameInfoHeight,
+                                           self._width - self._margin * 2,
+                                           self._height - self._margin -
+                                           gameInfoHeight)
         pass
 
     def _showGameInfo(self):
         if self._display is None:
             return
-        x = self._margin * 2
-        y = self._margin * 2
-        dy = self._font.get_height()
-        dy += dy // 2
-        tmpSurf = self._font.render('ОЧКИ:', True, self._const.SCORECOLOR)
+        x = self._margin
+        y = self._margin
+
+        infoStr = f'Уровень {self.level:05d}'
+        tmpSurf = self._font.render(infoStr, True, self._const.SCORECOLOR)
+        infoHeight = tmpSurf.get_height()
+        pygame.draw.rect(self._display, self._const.BORDERCOLOR,
+                         (0, 0, self._width, self._margin * 2 + infoHeight))
         self._display.blit(tmpSurf, (x, y))
-        y += dy
-        scorestr = '{:010d}'.format(self._score)
-        tmpSurf = self._font.render(scorestr, True, self._const.SCORECOLOR)
+
+        infoStr = f'Очки {self._score:010d}'
+        tmpSurf = self._font.render(infoStr, True, self._const.SCORECOLOR)
+        x = self._width - self._margin - tmpSurf.get_width()
         self._display.blit(tmpSurf, (x, y))
+        return infoHeight
 
     @property
     def score(self):
         return self._score
 
-    def addScore(self, addpoints):
+    @property
+    def level(self):
+        return self._level
+
+    def updateScore(self, addpoints):
         if addpoints > 0:
             self._score += addpoints
 
-    def _showgrid(self):
-        if self._display is None:
-            return
-        x = int(self._width * self._const.MENURATIO + self._margin//2)
-        y = self._margin
-        dy = (self._display.get_height() - self._margin * 2) // 30
-        dx = (self._display.get_width() - x - self._margin * 2) // 30
-        for i in range(31):
-            pygame.draw.line(self._display, (255, 0, 0),
-                             (x + i * dx, self._margin),
-                             (x + i * dx,
-                              self._display.get_height() - self._margin), 1)
+    def nextLevel(self):
+        self._level += 1
