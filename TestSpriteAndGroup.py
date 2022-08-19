@@ -59,52 +59,83 @@ class TestSprite(pygame.sprite.Sprite):
         self._dy = -self._dy
         self._buildTxt(self.rect.x, self.rect.y)
 
+    def invertSpeed(self):
+        self._dx *= -1
+        self._dy *= -1
+        self._buildTxt(self.rect.x, self.rect.y)
+
 
 def detectCollision(group):
-    # processed = []
+    processed = []
     for sp in group:
         collist = pygame.sprite.spritecollide(sp, group, False)
         for cs in collist:
             if cs is sp:
                 continue
+            if (sp, cs) in processed:
+                continue
+            processed.append((sp, cs))
+            processed.append((cs, sp))
             # RightBottom (LeftToRight or TopToBottom)
             if cs.rect.collidepoint(sp.rect.right, sp.rect.bottom):
                 if abs(cs.rect.left - sp.rect.right) > abs(
                         cs.rect.top - sp.rect.bottom):  # LeftToRight
                     sp.invertDx()
+                    cs.invertDx()
                     continue
                 else:  # TopToBottom
                     sp.invertDy()
+                    cs.invertDy()
                     continue
             # RightTop (LeftToRight or BottomToTop)
             if cs.rect.collidepoint(sp.rect.right, sp.rect.top):
                 if abs(cs.rect.left - sp.rect.right) > abs(
                         cs.rect.bottom - sp.rect.top):  # LeftToRight
                     sp.invertDx()
+                    cs.invertDx()
                     continue
                 else:  # BottomToTop
                     sp.invertDy()
+                    cs.invertDy()
                     continue
             # LeftTop (RightToLeft or BottomToTop)
             if cs.rect.collidepoint(sp.rect.left, sp.rect.top):
                 if abs(cs.rect.right - sp.rect.left) > abs(
                         cs.rect.bottom - sp.rect.top):  # RightToLeft
                     sp.invertDx()
+                    cs.invertDx()
                     continue
                 else:  # BottomToTop
                     sp.invertDy()
+                    cs.invertDy()
                     continue
             # LeftBottom (RightToLeft or TopToBottom)
             if cs.rect.collidepoint(sp.rect.left, sp.rect.bottom):
                 if abs(cs.rect.right - sp.rect.left) > abs(
                         cs.rect.top - sp.rect.bottom):  # RightToLeft
                     sp.invertDx()
+                    cs.invertDx()
                     continue
                 else:  # TopToBottom
                     sp.invertDy()
+                    cs.invertDy()
                     continue
 
     pass
+
+
+def detectCollision2(group):
+    processed = []
+    for sp in group:
+        collist = pygame.sprite.spritecollide(sp, group, False)
+        for cs in collist:
+            if cs is sp:
+                continue
+            if (sp, cs) not in processed:
+                processed.append((sp, cs))
+                processed.append((cs, sp))
+                sp.invertSpeed()
+                cs.invertSpeed()
 
 
 def main():
@@ -113,12 +144,13 @@ def main():
     pygame.display.set_caption('Sprite and Group test')
     clock = pygame.time.Clock()
     sg = pygame.sprite.Group()
-    for i in range(2):
+    for i in range(10):
         x = random.randint(150, BASE_WIDTH - 150)
         y = random.randint(150, BASE_HEIGHT - 150)
-        ts = TestSprite(x, y, i+2, i+2, f'TEST_{i}')
+        ts = TestSprite(x, y, 3, 3, f'TEST_{i}')
         sg.add(ts)
 
+    isStep = False
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -129,13 +161,17 @@ def main():
                     pygame.quit()
                     return
                 if event.key == pygame.K_SPACE:
-                    sg.update()
-                    detectCollision(sg)
                     # sg.update()
+                    detectCollision2(sg)
+                    sg.update()
+                if event.key == pygame.K_s:
+                    isStep = not isStep
 
         display.fill((200, 200, 200))
         sg.draw(display)
-
+        if not isStep:
+            detectCollision2(sg)
+            sg.update()
         pygame.display.update()
         clock.tick(60)
 
