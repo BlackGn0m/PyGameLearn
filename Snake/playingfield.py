@@ -19,9 +19,8 @@ class PlayingField:
         # self._menurect = ()
         self._font = pygame.font.Font('res/a_lcdnova.ttf',
                                       self._const.SCOREFONTSIZE)
-        self._fieldrect = pygame.rect.Rect(self._margin, self._margin,
-                                           self._width - self._margin * 2,
-                                           self._height - self._margin * 2)
+        self._fieldrect = None
+
         self.changeDisplay(display)
         pass
 
@@ -84,3 +83,4 @@ class PlayingField:
 
     def nextLevel(self):
         self._level += 1
+        self.updateScore(self._const.LEVELSCORE)

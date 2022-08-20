@@ -15,6 +15,11 @@ class Const:
         self._marginratio = 0.017
         self._menuratio = 0.25
         self._fieldratio = 0.75
+
+        # Score
+        self._applescore = 1
+        self._levelscore = 100
+
         pass
 
     @property
@@ -60,3 +65,11 @@ class Const:
     @property
     def SCOREFONTSIZE(self):
         return self._scorefontsize
+
+    @property
+    def APPLESCORE(self):
+        return self._applescore
+
+    @property
+    def LEVELSCORE(self):
+        return self._levelscore
