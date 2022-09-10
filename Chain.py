@@ -78,7 +78,7 @@ class Chain:
         for i in range(self._length - 1):
             self._elems[i] = self._elems[i + 1]
         x, y = self._elems[-1]
-        x, y = self._changeCoord(x, y, self._speed)
+        x, y = self._changeCoord(x, y, self._radius + self._speed)
         self._elems[-1] = (x, y)
         return True
 
@@ -89,6 +89,9 @@ def main():
     clock = pygame.time.Clock()
     chain = Chain(display, 1)
     isEnd = False
+    CHAIN_MOVE_EVENT = pygame.USEREVENT + 1
+    updateSpeed = 500
+    pygame.time.set_timer(CHAIN_MOVE_EVENT, updateSpeed)
 
     while True:
         for event in pygame.event.get():
@@ -109,10 +112,20 @@ def main():
                     chain.changeDirect(DIRECT_DOWN)
                 if event.key == pygame.K_KP_PLUS:
                     chain.addElem()
+                if event.key == pygame.K_KP_DIVIDE:
+                    updateSpeed -= 10
+                    pygame.time.set_timer(CHAIN_MOVE_EVENT, updateSpeed)
+                    print(updateSpeed)
+                if event.key == pygame.K_KP_MULTIPLY:
+                    updateSpeed += 10
+                    pygame.time.set_timer(CHAIN_MOVE_EVENT, updateSpeed)
+                    print(updateSpeed)
+            if event.type == CHAIN_MOVE_EVENT:
+                if not isEnd:
+                    isEnd = not chain.update()
         # ---------- Paint scene --------------
         display.fill(COLOR_WHITE)
-        if not isEnd:
-            isEnd = not chain.update()
+
         chain.showchain()
 
         # --------- Update display ------------
